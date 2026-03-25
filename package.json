@@ -46,11 +46,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/gitsnap.git"
+    "url": "https://github.com/MdAbdullahAlMahmud/gitsnap.git"
   },
-  "homepage": "https://github.com/yourusername/gitsnap#readme",
+  "homepage": "https://github.com/MdAbdullahAlMahmud/gitsnap#readme",
   "bugs": {
-    "url": "https://github.com/yourusername/gitsnap/issues"
+    "url": "https://github.com/MdAbdullahAlMahmud/gitsnap/issues"
   },
   "lint-staged": {
     "*.ts": [

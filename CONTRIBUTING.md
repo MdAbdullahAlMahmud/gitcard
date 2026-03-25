@@ -5,7 +5,7 @@ Thank you for your interest in contributing!
 ## Setup
 
 ```bash
-git clone https://github.com/yourusername/gitsnap
+git clone https://github.com/MdAbdullahAlMahmud/gitsnap
 cd gitsnap
 npm install
 ```
