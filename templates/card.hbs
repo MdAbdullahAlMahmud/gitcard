@@ -2,149 +2,193 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{repoName}} — gitsnap</title>
   <style>{{{styles}}}</style>
+  {{#if primaryLanguage}}
+  <style>
+    :root {
+      --lang-gradient: linear-gradient(90deg, {{primaryLanguage.color}}cc 0%, {{primaryLanguage.color}}66 60%, transparent 100%);
+    }
+    .avatar-ring { background: linear-gradient(135deg, {{primaryLanguage.color}}, {{primaryLanguage.color}}88); }
+    .card-accent  { background: linear-gradient(90deg, {{primaryLanguage.color}} 0%, {{primaryLanguage.color}}99 40%, {{primaryLanguage.color}}33 100%); }
+  </style>
+  {{/if}}
 </head>
 <body class="{{theme}}">
-  <div class="card">
+<div class="card">
 
-    <!-- Header -->
-    <div class="header">
-      {{#if github.avatarUrl}}
-        <img class="avatar" src="{{github.avatarUrl}}" alt="{{github.owner}}" />
-      {{else}}
-        <div class="avatar-placeholder">📦</div>
+  <!-- Top accent bar -->
+  <div class="card-accent"></div>
+
+  <!-- Two-column body -->
+  <div class="card-body">
+
+    <!-- ── LEFT ── -->
+    <div class="left">
+
+      <!-- Header -->
+      <div class="header">
+        <div class="avatar-wrap">
+          <div class="avatar-ring">
+            {{#if github.avatarUrl}}
+              <img class="avatar" src="{{github.avatarUrl}}" alt="{{github.owner}}" />
+            {{else}}
+              <div class="avatar-placeholder">⚡</div>
+            {{/if}}
+          </div>
+        </div>
+
+        <div class="header-meta">
+          {{#if github.owner}}
+            <div class="repo-owner">{{github.owner}}</div>
+          {{/if}}
+          <div class="repo-name">{{repoName}}</div>
+          {{#if github.description}}
+            <div class="repo-description">{{github.description}}</div>
+          {{/if}}
+          <div class="badges">
+            {{#if packageVersion}}
+              <span class="badge version">v{{packageVersion}}</span>
+            {{/if}}
+            {{#if github.license}}
+              <span class="badge license">{{github.license}}</span>
+            {{/if}}
+            <span class="badge branch">⎇ {{defaultBranch}}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Language bar -->
+      {{#if languages.length}}
+      <div class="lang-section">
+        <div class="lang-bar">
+          {{#each languages}}
+            <div class="lang-seg" style="width:{{percentage}}%;background:{{color}};"></div>
+          {{/each}}
+        </div>
+        <div class="lang-labels">
+          {{#each languages}}
+            <span class="lang-label">
+              <span class="lang-dot" style="background:{{color}};"></span>
+              <span class="lang-name">{{language}}</span>
+              <span class="lang-pct">{{formatPercent percentage}}%</span>
+            </span>
+          {{/each}}
+        </div>
+      </div>
       {{/if}}
 
-      <div class="header-meta">
-        <div class="repo-full-name">
-          {{#if github}}{{github.owner}} / {{/if}}{{repoName}}
-        </div>
-        {{#if github.description}}
-          <div class="repo-description">{{github.description}}</div>
-        {{/if}}
-      </div>
-
-      <div class="header-right">
-        {{#if packageVersion}}
-          <span class="version-badge">v{{packageVersion}}</span>
-        {{/if}}
-        {{#if github.license}}
-          <span class="license-badge">{{github.license}}</span>
-        {{/if}}
-      </div>
-    </div>
-
-    <!-- Language bar -->
-    {{#if languages.length}}
-    <div class="lang-section">
-      <div class="lang-bar">
-        {{#each languages}}
-          <div class="lang-bar-segment" style="width: {{percentage}}%; background: {{color}};"></div>
+      <!-- Recent commits -->
+      {{#if recentCommits.length}}
+      <div class="commits">
+        <div class="section-label">Recent commits</div>
+        {{#each recentCommits}}
+          <div class="commit">
+            <span class="commit-hash">{{hash}}</span>
+            <span class="commit-msg">{{message}}</span>
+            <span class="commit-date">{{relativeDate}}</span>
+          </div>
         {{/each}}
       </div>
-      <div class="lang-labels">
-        {{#each languages}}
-          <span class="lang-label">
-            <span class="lang-dot" style="background: {{color}};"></span>
-            <span class="lang-name">{{language}}</span>
-            <span>{{formatPercent percentage}}%</span>
-          </span>
-        {{/each}}
-      </div>
-    </div>
-    {{/if}}
-
-    <!-- GitHub stats -->
-    {{#if github}}
-    <div class="github-stats">
-      <span class="stat">
-        <span class="stat-icon">★</span>
-        <span class="stat-value">{{formatNum github.stars}}</span>
-        <span>stars</span>
-      </span>
-      <span class="stat">
-        <span class="stat-icon">⑂</span>
-        <span class="stat-value">{{formatNum github.forks}}</span>
-        <span>forks</span>
-      </span>
-      <span class="stat">
-        <span class="stat-icon">●</span>
-        <span class="stat-value">{{github.openIssues}}</span>
-        <span>issues</span>
-      </span>
-      <span class="stat">
-        <span class="stat-icon">👤</span>
-        <span class="stat-value">{{contributorCount}}</span>
-        <span>contributors</span>
-      </span>
-    </div>
-    {{/if}}
-
-    <!-- Repo stats -->
-    <div class="repo-stats">
-      <span class="stat">
-        <span class="stat-icon">📁</span>
-        <span class="stat-value">{{formatNum totalFiles}}</span>
-        <span>files</span>
-      </span>
-      <span class="stat">
-        <span class="stat-icon">💾</span>
-        <span class="stat-value">{{totalSizeFormatted}}</span>
-      </span>
-      <span class="stat">
-        <span class="stat-icon">📝</span>
-        <span class="stat-value">{{formatNum totalCommits}}</span>
-        <span>commits</span>
-      </span>
-      {{#if ageFormatted}}
-      <span class="stat">
-        <span class="stat-icon">🕐</span>
-        <span>{{ageFormatted}}</span>
-      </span>
       {{/if}}
-      {{#if packageManager}}
-      <span class="stat">
-        <span class="stat-icon">📦</span>
-        <span>{{packageManager}}</span>
-        {{#if dependencyCount}}
-        <span class="stat-value">· {{dependencyCount}} deps</span>
-        {{/if}}
-      </span>
-      {{/if}}
-    </div>
 
-    <!-- Recent commits -->
-    {{#if recentCommits.length}}
-    <div class="commits-section">
-      <div class="commits-label">Recent commits</div>
-      {{#each recentCommits}}
-        <div class="commit">
-          <span class="commit-hash">{{hash}}</span>
-          <span class="commit-msg">{{message}}</span>
-          <span class="commit-date">{{relativeDate}}</span>
+    </div><!-- /left -->
+
+    <!-- ── RIGHT ── -->
+    <div class="right">
+
+      <!-- GitHub stat chips -->
+      {{#if github}}
+      <div class="gh-stats">
+        <div class="gh-chip">
+          <span class="gh-chip-val">{{formatNum github.stars}}</span>
+          <span class="gh-chip-label"><span class="gh-chip-icon">★</span> Stars</span>
         </div>
-      {{/each}}
-    </div>
-    {{/if}}
+        <div class="gh-chip">
+          <span class="gh-chip-val">{{formatNum github.forks}}</span>
+          <span class="gh-chip-label"><span class="gh-chip-icon">⑂</span> Forks</span>
+        </div>
+        <div class="gh-chip">
+          <span class="gh-chip-val">{{github.openIssues}}</span>
+          <span class="gh-chip-label"><span class="gh-chip-icon">◎</span> Issues</span>
+        </div>
+        <div class="gh-chip">
+          <span class="gh-chip-val">{{contributorCount}}</span>
+          <span class="gh-chip-label"><span class="gh-chip-icon">◈</span> Contributors</span>
+        </div>
+      </div>
+      {{/if}}
 
-    <!-- Topics -->
-    {{#if github.topics.length}}
-    <div class="topics-section">
-      <span class="topics-label">topics:</span>
-      {{#each github.topics}}
-        <span class="topic-tag">{{this}}</span>
-      {{/each}}
-    </div>
-    {{/if}}
+      <!-- Repo info -->
+      <div class="info-grid">
+        <div class="info-row">
+          <span class="info-icon">📁</span>
+          <span class="info-val">{{formatNum totalFiles}}</span>
+          <span>files</span>
+          <span class="info-sep">·</span>
+          <span class="info-val">{{totalSizeFormatted}}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-icon">📝</span>
+          <span class="info-val">{{formatNum totalCommits}}</span>
+          <span>commits</span>
+          {{#if ageFormatted}}
+            <span class="info-sep">·</span>
+            <span>{{ageFormatted}}</span>
+          {{/if}}
+        </div>
+        {{#if packageManager}}
+        <div class="info-row">
+          <span class="info-icon">📦</span>
+          <span class="info-val">{{packageManager}}</span>
+          {{#if dependencyCount}}
+            <span class="info-sep">·</span>
+            <span class="info-val">{{dependencyCount}}</span>
+            <span>dependencies</span>
+          {{/if}}
+        </div>
+        {{/if}}
+        {{#unless github}}
+        <div class="info-row">
+          <span class="info-icon">👤</span>
+          <span class="info-val">{{contributorCount}}</span>
+          <span>contributors</span>
+        </div>
+        {{/unless}}
+      </div>
 
-    <!-- Footer -->
-    <div class="footer">
-      <span class="footer-brand">⚡ Generated by gitsnap</span>
+      <!-- Topics -->
+      {{#if github.topics.length}}
+      <div>
+        <div class="section-label">Topics</div>
+        <div class="topics">
+          {{#each github.topics}}
+            <span class="topic">{{this}}</span>
+          {{/each}}
+        </div>
+      </div>
+      {{/if}}
+
+    </div><!-- /right -->
+  </div><!-- /card-body -->
+
+  <!-- Footer -->
+  <div class="footer">
+    <div class="footer-brand">
+      <span class="footer-brand-dot"></span>
+      gitsnap
+    </div>
+    <div class="footer-right">
+      {{#if primaryLanguage}}
+      <div class="footer-primary-lang">
+        <span class="lang-dot" style="background:{{primaryLanguage.color}};width:8px;height:8px;border-radius:50%;display:inline-block;"></span>
+        {{primaryLanguage.language}}
+      </div>
+      {{/if}}
       <span class="footer-date">{{formatDate generatedAt}}</span>
     </div>
-
   </div>
+
+</div>
 </body>
 </html>

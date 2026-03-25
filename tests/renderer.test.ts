@@ -73,7 +73,7 @@ describe('renderCard', () => {
     const noGithub = { ...snapshot, github: null };
     const html = await renderCard(noGithub);
     // The GitHub stats section (stars/forks) should not be rendered
-    expect(html).not.toContain('class="github-stats"');
+    expect(html).not.toContain('class="gh-stats"');
   });
 
   it('uses light theme class', async () => {

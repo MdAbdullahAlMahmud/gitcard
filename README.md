@@ -21,7 +21,9 @@ npx gitsnap
 ```
 
 <div align="center">
-<img src="gitsnap_architecture.svg" alt="gitsnap card example" width="720" />
+  <img src="assets/preview-dark.png" alt="gitsnap dark theme" width="720" />
+  <br/><br/>
+  <img src="assets/preview-light.png" alt="gitsnap light theme" width="720" />
 </div>
 
 ---

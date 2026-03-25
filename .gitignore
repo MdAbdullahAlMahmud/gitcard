@@ -5,6 +5,7 @@ coverage/
 *.pdf
 *.svg
 !gitsnap_architecture.svg
+!assets/*.png
 .DS_Store
 *.log
 .env
