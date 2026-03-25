@@ -1,0 +1,10 @@
+node_modules/
+dist/
+coverage/
+*.png
+*.pdf
+*.svg
+!gitsnap_architecture.svg
+.DS_Store
+*.log
+.env
