@@ -45,8 +45,10 @@ async function parseCargo(repoPath: string): Promise<PackageData | null> {
   if (!content) return null;
   const nameMatch = content.match(/^\s*name\s*=\s*"([^"]+)"/m);
   const versionMatch = content.match(/^\s*version\s*=\s*"([^"]+)"/m);
-  const depMatches = content.match(/^\[dependencies\]([\s\S]*?)(?=^\[|$)/m);
-  const deps = depMatches ? depMatches[1].split('\n').filter((l) => l.trim() && !l.startsWith('#')).length : 0;
+  const depMatches = content.match(/\[dependencies\]\n([\s\S]*?)(?=\n\[|$)/);
+  const deps = depMatches
+    ? depMatches[1].split('\n').filter((l) => l.trim() && !l.startsWith('#')).length
+    : 0;
   return {
     name: nameMatch?.[1] ?? null,
     version: versionMatch?.[1] ?? null,
@@ -62,7 +64,9 @@ async function parseGoMod(repoPath: string): Promise<PackageData | null> {
   const moduleMatch = content.match(/^module\s+(\S+)/m);
   const requireBlock = content.match(/^require\s*\(([\s\S]*?)\)/m);
   const deps = requireBlock
-    ? requireBlock[1].split('\n').filter((l) => l.trim() && !l.trim().startsWith('//') && !l.trim().startsWith(')')).length
+    ? requireBlock[1]
+        .split('\n')
+        .filter((l) => l.trim() && !l.trim().startsWith('//') && !l.trim().startsWith(')')).length
     : 0;
   const name = moduleMatch?.[1]?.split('/').pop() ?? null;
   return {
